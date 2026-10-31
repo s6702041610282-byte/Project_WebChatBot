@@ -1,0 +1,1001 @@
+/* ==========================================================
+   หน้าเข้าสู่ระบบ / สมัครสมาชิก / ลืมรหัสผ่าน / ข้อมูลส่วนตัว
+   ซ้าย: ฟอร์มขาวเรียบ · ขวา: วงกลมใหญ่ น้องบอทลอย ลูกแก้วไอคอน ใบไม้ไหว
+   ========================================================== */
+.auth {
+  --a-ink: #1b2559;
+  --a-text: #46507a;
+  --a-muted: #8a91ad;
+  --a-line: #e6e8f2;
+  --a-field: #f5f6fb;
+  --a-primary: #4c4ee8;
+  --a-primary-2: #6741d9;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - var(--navbar-height));
+  padding: 36px 24px 56px;
+  font-family: var(--q-font);
+  color-scheme: light;
+  background: linear-gradient(135deg, #e7ecff 0%, #f1e9ff 45%, #ffe9f3 100%);
+}
+
+.auth__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.auth__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.6;
+  animation: auth-drift 16s ease-in-out infinite alternate;
+}
+
+.auth__blob--1 {
+  top: -80px;
+  left: -60px;
+  width: 380px;
+  height: 380px;
+  background: #c5d0ff;
+}
+
+.auth__blob--2 {
+  right: -80px;
+  bottom: -100px;
+  width: 420px;
+  height: 420px;
+  background: #ffc9de;
+  animation-delay: -6s;
+}
+
+.auth__blob--3 {
+  top: 30%;
+  left: 40%;
+  width: 260px;
+  height: 260px;
+  background: #e5dbff;
+  animation-delay: -10s;
+}
+
+@keyframes auth-drift {
+  to {
+    transform: translate(40px, -30px) scale(1.12);
+  }
+}
+
+/* ---------- การ์ดหลัก ---------- */
+.auth-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  width: 100%;
+  max-width: 1080px;
+  min-height: 640px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(27, 37, 89, 0.05), 0 30px 80px rgba(76, 78, 232, 0.18);
+  animation: shell-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes shell-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+/* ---------- ฝั่งฟอร์ม ---------- */
+.auth-main {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 52px 30px;
+  color: var(--a-text);
+}
+
+.auth-main__top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 22px;
+}
+
+.auth-main__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--a-muted);
+  transition: color 0.2s, gap 0.2s;
+}
+
+.auth-main__back:hover {
+  gap: 10px;
+  color: var(--a-primary);
+}
+
+.auth-main__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 28px 0 8px;
+}
+
+.auth-main__title {
+  margin: 0;
+  font-family: var(--q-font);
+  font-size: 1.55rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--a-ink);
+}
+
+.auth-main__sub {
+  margin: 6px 0 24px;
+  font-size: 0.92rem;
+  text-align: center;
+  color: var(--a-muted);
+}
+
+.auth-main__footer {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--a-muted);
+}
+
+.auth-main__footer a {
+  font-weight: 600;
+  color: var(--a-primary);
+}
+
+.auth-main__footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-admin-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--a-muted);
+}
+
+/* ---------- ฝั่งภาพ: วงกลมใหญ่ ---------- */
+.aart {
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+  background: #fff;
+}
+
+.aart__circle {
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  width: 118%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: radial-gradient(circle at 42% 45%, #91a7ff 0%, #5c7cfa 28%, #4c4ee8 52%, #3b2fb8 78%, #2b1f8f 100%);
+  box-shadow: inset 0 0 80px rgba(20, 10, 80, 0.45);
+  overflow: hidden;
+}
+
+.aart__halo {
+  position: absolute;
+  top: 46%;
+  left: 40%;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45), transparent 65%);
+  animation: aart-pulse 4s ease-in-out infinite;
+}
+
+@keyframes aart-pulse {
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0.7;
+  }
+}
+
+/* ใบไม้ */
+.aart__leaf {
+  position: absolute;
+  width: 120px;
+  opacity: 0.95;
+}
+
+.aart__leaf--top {
+  top: 4%;
+  right: 16%;
+  width: 150px;
+  transform: rotate(-150deg);
+}
+
+.aart__leaf--bottom {
+  bottom: 2%;
+  right: 20%;
+  width: 160px;
+}
+
+.aart__leaf--mid {
+  top: 40%;
+  right: 6%;
+  width: 110px;
+  transform: rotate(-100deg);
+  opacity: 0.8;
+}
+
+.aart__leafsway {
+  transform-origin: 60px 196px;
+  animation: aart-sway 5s ease-in-out infinite;
+}
+
+.aart__leaf--top .aart__leafsway {
+  animation-delay: -2s;
+}
+
+@keyframes aart-sway {
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+/* เส้นแสงเชื่อม (พื้นที่เดียวกับไอคอน = กล่องเนื้อหาภายในวงกลม) */
+.aart__links,
+.aart__orb,
+.aart__spark,
+.aart__bot {
+  --area-x: 4%;
+  --area-w: 74%;
+  --area-y: 8%;
+  --area-h: 84%;
+}
+
+.aart__links {
+  position: absolute;
+  top: var(--area-y);
+  left: var(--area-x);
+  width: var(--area-w);
+  height: var(--area-h);
+  overflow: visible;
+}
+
+.aart__links line {
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 0.5;
+  stroke-dasharray: 1.5 2;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.6;
+  animation: aart-flow 2.4s linear infinite;
+}
+
+@keyframes aart-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+/* ลูกแก้วไอคอน */
+.aart__orb {
+  position: absolute;
+  translate: -50% -50%;
+  border-radius: 50%;
+  animation: aart-bob 5.5s ease-in-out infinite;
+}
+
+.aart__orb,
+.aart__spark {
+  left: calc(var(--area-x) + var(--area-w) * var(--px, 0));
+  top: calc(var(--area-y) + var(--area-h) * var(--py, 0));
+}
+
+.aart__orbin {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  color: #fff;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85) 0%, var(--from) 22%, var(--to) 75%);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.18), 0 0 26px rgba(255, 255, 255, 0.55), 0 14px 26px rgba(20, 10, 80, 0.35);
+  transition: transform 0.3s;
+}
+
+.aart__orbin svg {
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+}
+
+@keyframes aart-bob {
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.aart__orb:nth-child(odd) .aart__orbin {
+  animation: aart-wobble 7s ease-in-out infinite;
+}
+
+@keyframes aart-wobble {
+  50% {
+    transform: rotate(-8deg) scale(1.05);
+  }
+}
+
+/* ประกาย */
+.aart__spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  translate: -50% -50%;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: aart-twinkle 2.8s ease-in-out infinite;
+}
+
+@keyframes aart-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3) rotate(45deg);
+  }
+}
+
+/* น้องบอท */
+.aart__bot {
+  position: absolute;
+  top: calc(var(--area-y) + var(--area-h) / 2);
+  left: calc(var(--area-x) + var(--area-w) / 2);
+  display: grid;
+  justify-items: center;
+  translate: -50% -50%;
+}
+
+.aart__bot > svg {
+  animation: aart-fly 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 18px 24px rgba(20, 10, 80, 0.35));
+}
+
+@keyframes aart-fly {
+  50% {
+    transform: translateY(-16px) rotate(-3deg);
+  }
+}
+
+.aart__shadow {
+  width: 110px;
+  height: 16px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: rgba(20, 10, 80, 0.35);
+  filter: blur(5px);
+  animation: aart-shadow 4.5s ease-in-out infinite;
+}
+
+@keyframes aart-shadow {
+  50% {
+    transform: scale(0.75);
+    opacity: 0.6;
+  }
+}
+
+.aart__say {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: 50%;
+  margin-left: -78px;
+  padding: 6px 14px;
+  border-radius: 16px 16px 16px 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #3b2fb8;
+  background: #fff;
+  box-shadow: 0 8px 18px rgba(20, 10, 80, 0.3);
+  animation: aart-say 6s ease-in-out infinite;
+  transform-origin: 0 100%;
+}
+
+@keyframes aart-say {
+  0%,
+  8% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  14%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* ปุ่ม Google จริง (Google Identity Services) */
+.gsi {
+  position: relative;
+  min-height: 44px;
+}
+
+.gsi__btn {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+}
+
+.gsi__skeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  height: auto;
+}
+
+@keyframes gsi-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.gsi__busy {
+  position: absolute;
+  inset: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.gsi .auth-alert {
+  margin-top: 10px;
+}
+
+.gsi-off {
+  display: grid;
+}
+
+/* ปุ่มลิงก์ (ออกจากระบบ / ส่งรหัสอีกครั้ง) */
+.auth-linkbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  color: #2563eb;
+  background: none;
+  cursor: pointer;
+}
+
+.auth-linkbtn:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.auth-linkbtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-note {
+  margin: 0;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #64748b;
+}
+
+/* บัญชีที่กำลังกรอกข้อมูล */
+.who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+  border: 1px solid #dbeafe;
+}
+
+.who__pic {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px #fff;
+}
+
+.who__pic--letter {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.who__text {
+  display: grid;
+  min-width: 0;
+}
+
+.who__text small {
+  color: #64748b;
+}
+
+.who__text b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #1f2937;
+}
+
+/* ขั้นตอนลืมรหัสผ่าน */
+.reset-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.reset-steps li {
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.reset-steps li.is-now {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.reset-steps li.is-done {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+/* ---------- ฟอร์ม ---------- */
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-form > *,
+.field,
+.field__box {
+  min-width: 0;
+}
+
+.auth-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.auth-form__forgot {
+  justify-self: end;
+  margin-top: -6px;
+  font-size: 0.88rem;
+  color: #2563eb;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--q-ink);
+}
+
+.field__box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--q-soft);
+  border: 1.5px solid var(--q-line);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field__box > svg {
+  flex: 0 0 auto;
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.field__box:focus-within {
+  background: #fff;
+  border-color: var(--q-blue);
+  box-shadow: 0 0 0 4px rgba(59, 91, 219, 0.14);
+}
+
+.field__box:focus-within > svg {
+  color: #2563eb;
+}
+
+.field__box input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  font: inherit;
+  color: #0f172a;
+  background: none;
+  border: 0;
+  outline: none;
+}
+
+.field__box input::placeholder {
+  color: #a3b1c6;
+}
+
+.field__eye {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  color: #94a3b8;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.field__eye:hover {
+  color: #2563eb;
+  background: #e8effc;
+}
+
+.field__hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.auth-submit {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 14px;
+  font-family: var(--q-font);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #f76707, #ff922b);
+  box-shadow: 0 10px 22px rgba(247, 103, 7, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.auth-submit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.auth-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(247, 103, 7, 0.4);
+}
+
+.auth-submit:hover::after {
+  transform: translateX(120%);
+}
+
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.auth-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.auth-form .auth-alert {
+  margin: 0;
+}
+
+.auth-alert svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.auth-alert--error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.auth-alert--ok {
+  color: #166534;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.auth-alert--info {
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.auth-alert--lock {
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+
+
+/* ---------- จอเล็ก ---------- */
+@media (max-width: 900px) {
+  .auth {
+    padding: 16px 14px 40px;
+  }
+  .auth-shell {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    min-height: 0;
+    border-radius: 24px;
+  }
+  .aart {
+    order: -1;
+    height: 250px;
+    min-height: 0;
+  }
+  .aart__circle {
+    top: -30px;
+    left: 50%;
+    width: 640px;
+    transform: translateX(-50%);
+  }
+  .aart__links,
+  .aart__orb,
+  .aart__spark,
+  .aart__bot {
+    --area-x: 24%;
+    --area-w: 52%;
+    --area-y: 11%;
+    --area-h: 30%;
+  }
+  .aart__leaf--bottom {
+    display: none;
+  }
+  .aart__leaf--top {
+    top: 8%;
+    right: 12%;
+    width: 120px;
+  }
+  .aart__bot > svg {
+    width: 130px;
+    height: 130px;
+  }
+  .aart__orb {
+    scale: 0.66;
+  }
+  .aart__leaf--mid {
+    display: none;
+  }
+  .aart__say {
+    display: none;
+  }
+  .auth-main {
+    padding: 20px 22px 26px;
+  }
+  .auth-main__body {
+    padding-top: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.auth-form__row {
+  align-items: start;
+}
+
+/* ---------- โทนฟอร์มตามแบบ: ช่องเทาอ่อน ปุ่มหลักม่วงคราม ---------- */
+.auth .field__label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: var(--a-ink);
+}
+
+.field__aside {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--a-primary);
+}
+
+.field__aside:hover {
+  text-decoration: underline;
+}
+
+.auth .field__box {
+  border-radius: 10px;
+  background: var(--a-field);
+  border: 1.5px solid transparent;
+}
+
+.auth .field__box > svg {
+  display: none;
+}
+
+.auth .field__box:focus-within {
+  background: #fff;
+  border-color: var(--a-primary);
+  box-shadow: 0 0 0 4px rgba(76, 78, 232, 0.12);
+}
+
+.auth .field__box input {
+  padding: 12px 0;
+  font-size: 0.95rem;
+  color: var(--a-ink);
+}
+
+.auth .field__box input::placeholder {
+  color: #b2b7cc;
+}
+
+.auth .field__eye:hover {
+  color: var(--a-primary);
+  background: #eeefff;
+}
+
+.auth-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+  font-size: 0.88rem;
+  color: var(--a-text);
+  cursor: pointer;
+}
+
+.auth-remember input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--a-primary);
+}
+
+.auth .auth-submit {
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  background: linear-gradient(90deg, var(--a-primary), var(--a-primary-2));
+  box-shadow: 0 10px 22px rgba(76, 78, 232, 0.32);
+}
+
+.auth .auth-submit:hover:not(:disabled) {
+  box-shadow: 0 14px 28px rgba(76, 78, 232, 0.42);
+}
+
+.auth .auth-divider {
+  margin: 22px 0 18px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--a-muted);
+}
+
+.auth .auth-divider::before,
+.auth .auth-divider::after {
+  background: var(--a-line);
+}
+
+/* ปุ่ม Google แบบเม็ดยาสีขาว (ใช้ตอนยังไม่ได้ตั้งค่า / ระหว่างโหลด) */
+.gbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 46px;
+  border-radius: 999px;
+  border: 1.5px solid var(--a-line);
+  font: inherit;
+  font-weight: 600;
+  color: var(--a-ink);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(27, 37, 89, 0.06);
+}
+
+.gbtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.gsi-off__note {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--a-muted);
+}
+
+.auth .gsi__btn {
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(27, 37, 89, 0.06);
+}
+
+.auth .who {
+  background: linear-gradient(135deg, #eef0ff, #f6efff);
+  border-color: #e0e3ff;
+}
+
+.auth .auth-linkbtn,
+.auth .auth-linkbtn:hover {
+  color: var(--a-primary);
+}

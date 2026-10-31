@@ -1,0 +1,123 @@
+/* ==========================================================
+   Chat backdrop — ฟองแชทลอย จุดแสง ลำแสง คลื่นด้านล่าง
+   ========================================================== */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ลำแสงจากด้านบน */
+.backdrop__beam {
+  position: absolute;
+  top: -20%;
+  left: 46%;
+  width: 560px;
+  height: 120%;
+  background: conic-gradient(from 180deg at 50% 0%, transparent 158deg, rgba(90, 150, 255, 0.22) 180deg, transparent 202deg);
+  filter: blur(18px);
+  transform-origin: 50% 0%;
+  animation: beam-swing 12s ease-in-out infinite;
+}
+
+.backdrop--header .backdrop__beam {
+  left: 60%;
+  opacity: 0.6;
+}
+
+/* ตารางจุดจาง ๆ (สื่อถึงข้อมูล/ดิจิทัล) */
+.backdrop__grid {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0) 0 0 / 28px 28px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+}
+
+/* ฟองแชทกระจกลอย */
+.backdrop__bubble {
+  --flip: 1;
+  position: absolute;
+  height: auto;
+  overflow: visible;
+  opacity: 0.85;
+  filter: drop-shadow(0 10px 20px rgba(10, 20, 90, 0.25));
+  animation: bubble-drift 9s ease-in-out infinite;
+}
+
+.backdrop__bubble path {
+  fill: rgba(37, 99, 235, 0.08);
+  stroke: rgba(125, 211, 252, 0.35);
+  stroke-width: 2;
+}
+
+.backdrop__bubble circle {
+  fill: rgba(125, 211, 252, 0.6);
+}
+
+/* จุดแสงระยิบ */
+.backdrop__sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+  animation-name: sparkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* คลื่นด้านล่าง เชื่อมกับ Section ถัดไป */
+.backdrop__wave {
+  position: absolute;
+  left: -3%;
+  bottom: -1px;
+  width: 106%;
+  max-width: none;
+  height: 110px;
+}
+
+.backdrop__wave path {
+  fill: var(--color-bg);
+}
+
+.backdrop__wave .backdrop__wave-back {
+  fill: rgba(var(--accent-rgb), 0.12);
+  animation: wave-shift 8s ease-in-out infinite;
+}
+
+@keyframes bubble-drift {
+  0%, 100% { transform: translateY(0) rotate(-4deg) scaleX(var(--flip)); }
+  50% { transform: translateY(-22px) rotate(4deg) scaleX(var(--flip)); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes beam-swing {
+  0%, 100% { transform: rotate(-8deg); opacity: 0.7; }
+  50% { transform: rotate(8deg); opacity: 1; }
+}
+
+@keyframes wave-shift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-40px); }
+}
+
+@media (max-width: 560px) {
+  .backdrop__beam {
+    width: 320px;
+    left: 30%;
+  }
+
+  .backdrop__bubble {
+    opacity: 0.5;
+  }
+
+  .backdrop__wave {
+    height: 60px;
+  }
+}

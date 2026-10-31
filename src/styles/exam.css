@@ -1,0 +1,955 @@
+/* ==========================================================
+   แบบทดสอบหลังเรียน — ข้อสอบทีละข้อ (ปรนัย / เรียงลำดับ / ปฏิบัติ)
+   สไตล์ "กระดาษข้อสอบ" สีขาวบนพื้นกรมท่า + เลขข้อยักษ์โปร่งแสง
+   ========================================================== */
+.exam {
+  --ex-blue: #2563eb;
+  --ex-amber: #f59e0b;
+  --ex-violet: #7c3aed;
+  --ex-ink: #0f172a;
+  --ex-text: #334155;
+  --ex-line: #e2e8f0;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 28px;
+  max-width: 1080px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* ---------- แถบรายการข้อ ---------- */
+.exam-rail {
+  position: sticky;
+  top: calc(var(--navbar-height) + 20px);
+  display: grid;
+  gap: 14px;
+  padding: 18px 14px;
+  border-radius: 24px;
+  border: 1px solid var(--color-line);
+  background: linear-gradient(170deg, rgba(30, 58, 160, 0.35), rgba(8, 14, 40, 0.8));
+  box-shadow: var(--shadow-md);
+}
+
+.exam-rail__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 4px;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.exam-rail__head b {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.exam-rail__head small {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.exam-rail__meter {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.exam-rail__meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+  transition: width 0.4s var(--ease);
+}
+
+.exam-rail__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.exam-rail__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 46px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease), color var(--duration) var(--ease), transform 0.15s var(--ease);
+}
+
+.exam-rail__item:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+.exam-rail__no {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.exam-rail__item.is-done {
+  color: #ffffff;
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+.exam-rail__item.is-current {
+  color: #0f172a;
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.45), 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.exam-rail__tick {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  padding: 2px;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #22c55e;
+  box-shadow: 0 0 0 2px #0a1233;
+}
+
+.exam-rail__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  border: 0;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--gradient-cta);
+  box-shadow: var(--shadow-cta);
+  cursor: pointer;
+  transition: transform 0.15s var(--ease);
+}
+
+.exam-rail__submit:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------- กระดาษข้อสอบ ---------- */
+.exam-sheet {
+  position: relative;
+  isolation: isolate;
+  padding-top: 46px;
+}
+
+/* เลขข้อยักษ์ (ขอบไล่สี) */
+.exam-sheet__ghost {
+  position: absolute;
+  top: -34px;
+  right: 8px;
+  z-index: -1;
+  font-family: var(--font-heading);
+  font-size: clamp(7rem, 16vw, 11rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(147, 197, 253, 0.35);
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.25), rgba(167, 139, 250, 0.05));
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+  pointer-events: none;
+}
+
+.exam-card {
+  --dir: 1;
+  position: relative;
+  padding: 34px 36px 32px 46px;
+  border-radius: 26px;
+  background:
+    linear-gradient(90deg, transparent 27px, rgba(244, 63, 94, 0.28) 27px, rgba(244, 63, 94, 0.28) 29px, transparent 29px),
+    repeating-linear-gradient(180deg, transparent 0 35px, rgba(37, 99, 235, 0.05) 35px 36px),
+    #ffffff;
+  color: var(--ex-text);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  animation: sheet-in 0.45s var(--ease);
+}
+
+/* รูเจาะกระดาษด้านซ้าย */
+.exam-card::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  left: 9px;
+  width: 10px;
+  background: radial-gradient(circle, #0a1233 0 4.5px, transparent 5.5px) 0 0 / 10px 64px repeat-y;
+  opacity: 0.85;
+}
+
+/* แถบสีตามประเภทข้อสอบ */
+.exam-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 46px;
+  right: 36px;
+  height: 6px;
+  border-radius: 0 0 6px 6px;
+  background: var(--ex-blue);
+}
+
+.exam-card--order::after {
+  background: var(--ex-amber);
+}
+
+.exam-card--classify::after,
+.exam-card--flow::after {
+  background: var(--ex-violet);
+}
+
+.exam-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exam-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ex-blue);
+  background: #eff6ff;
+}
+
+.exam-type--order {
+  color: #b45309;
+  background: #fffbeb;
+}
+
+.exam-type--classify,
+.exam-type--flow {
+  color: var(--ex-violet);
+  background: #f5f3ff;
+}
+
+.exam-card__count {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+
+.exam-card__question {
+  margin-top: 18px;
+  font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ex-ink);
+}
+
+.exam-card__hint {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.exam-card__answer {
+  margin-top: 24px;
+}
+
+/* ---------- ปรนัย ---------- */
+.ex-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ex-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 72px;
+  padding: 14px 40px 14px 14px;
+  border-radius: 16px;
+  border: 2px solid var(--ex-line);
+  background: #ffffff;
+  color: var(--ex-ink);
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+.ex-choice:hover {
+  border-color: #93c5fd;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
+}
+
+.ex-choice__letter {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--ex-blue);
+  background: #eff6ff;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.ex-choice__text {
+  line-height: 1.5;
+}
+
+.ex-choice__check {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  color: transparent;
+  transform: translateY(-50%);
+  transition: all 0.15s var(--ease);
+}
+
+.ex-choice.is-selected {
+  border-color: var(--ex-blue);
+  background: #eff6ff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.ex-choice.is-selected .ex-choice__letter {
+  color: #ffffff;
+  background: var(--ex-blue);
+}
+
+.ex-choice.is-selected .ex-choice__check {
+  border-color: var(--ex-blue);
+  background: var(--ex-blue);
+  color: #ffffff;
+}
+
+/* ---------- เรียงลำดับ ---------- */
+.ex-order {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 20px;
+}
+
+.ex-order__label,
+.ex-order__label-row {
+  margin-bottom: 10px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.ex-order__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ex-order__label-row .ex-order__label {
+  margin: 0;
+}
+
+.ex-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 0;
+  background: none;
+  font-size: 0.85rem;
+  color: var(--ex-blue);
+  cursor: pointer;
+}
+
+.ex-order__pool {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  min-height: 120px;
+  border-radius: 16px;
+  background: #fffbeb;
+  border: 2px dashed #fcd34d;
+}
+
+.ex-order__empty {
+  align-self: center;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #b45309;
+}
+
+.ex-chip {
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #fde68a;
+  background: #ffffff;
+  color: var(--ex-ink);
+  font-size: 0.95rem;
+  text-align: left;
+  box-shadow: 0 3px 0 #fde68a;
+  cursor: pointer;
+  animation: chip-in 0.25s var(--ease);
+  transition: transform 0.12s var(--ease), box-shadow 0.12s var(--ease), border-color 0.12s var(--ease);
+}
+
+.ex-chip:hover {
+  border-color: var(--ex-amber);
+  transform: translateX(4px);
+}
+
+.ex-chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #fde68a;
+}
+
+.ex-order__slots {
+  display: grid;
+  gap: 8px;
+}
+
+.ex-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 6px 8px 6px 6px;
+  border-radius: 12px;
+  border: 1.5px dashed #cbd5e1;
+  background: #f8fafc;
+}
+
+.ex-slot__no {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #94a3b8;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+}
+
+.ex-slot__placeholder {
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+
+.ex-slot.is-filled {
+  border-style: solid;
+  border-color: var(--ex-amber);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+  animation: chip-in 0.25s var(--ease);
+}
+
+.ex-slot.is-filled .ex-slot__no {
+  color: #ffffff;
+  background: var(--ex-amber);
+  border-color: var(--ex-amber);
+}
+
+.ex-slot__text {
+  flex: 1;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--ex-ink);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ex-slot__tools {
+  display: flex;
+  gap: 4px;
+}
+
+.ex-slot__tools button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.ex-slot__tools button:hover:not(:disabled) {
+  color: #b45309;
+  border-color: #fcd34d;
+}
+
+.ex-slot__tools button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- ปฏิบัติ: จำแนกประเภท ---------- */
+.ex-classify {
+  display: grid;
+  gap: 10px;
+}
+
+.ex-classify__legend {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ex-tag {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ex-tag--0 {
+  color: #0369a1;
+  background: #e0f2fe;
+}
+
+.ex-tag--1 {
+  color: #7c3aed;
+  background: #f3e8ff;
+}
+
+.ex-classify__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 12px 12px 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--ex-line);
+  background: #ffffff;
+  transition: border-color 0.15s var(--ease);
+}
+
+.ex-classify__row.is-done {
+  border-color: #c4b5fd;
+}
+
+.ex-classify__no {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ex-violet);
+  background: #f5f3ff;
+}
+
+.ex-classify__text {
+  color: var(--ex-ink);
+  line-height: 1.45;
+}
+
+.ex-seg {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: #f1f5f9;
+}
+
+.ex-seg__btn {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+.ex-seg__btn:hover {
+  color: var(--ex-ink);
+}
+
+.ex-seg__btn--0.is-on {
+  color: #ffffff;
+  background: #0284c7;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.ex-seg__btn--1.is-on {
+  color: #ffffff;
+  background: var(--ex-violet);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+/* ---------- ปฏิบัติ: ออกแบบบทสนทนา ---------- */
+.ex-flow {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f5f3ff, #eff6ff);
+  border: 1px solid #e9d5ff;
+}
+
+.ex-flow__line {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ex-flow__line--user {
+  justify-content: flex-end;
+}
+
+.ex-flow__avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #64748b;
+}
+
+.ex-flow__avatar--bot {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+}
+
+.ex-flow__bubble {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 16px 16px 4px 16px;
+  color: #ffffff;
+  background: #2563eb;
+}
+
+.ex-flow__slot {
+  flex: 1;
+  max-width: 88%;
+  padding: 12px;
+  border-radius: 4px 16px 16px 16px;
+  background: #ffffff;
+  border: 1.5px dashed #c4b5fd;
+}
+
+.ex-flow__slot-label {
+  margin-bottom: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ex-violet);
+}
+
+.ex-flow__options {
+  display: grid;
+  gap: 6px;
+}
+
+.ex-flow__option {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ex-line);
+  background: #f8fafc;
+  color: var(--ex-text);
+  font-size: 0.93rem;
+  text-align: left;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.ex-flow__option:hover {
+  border-color: #c4b5fd;
+}
+
+.ex-flow__option.is-selected {
+  border-color: var(--ex-violet);
+  background: #f5f3ff;
+  color: var(--ex-ink);
+  font-weight: 500;
+  box-shadow: inset 4px 0 0 var(--ex-violet);
+}
+
+/* ---------- ปุ่มเปลี่ยนข้อ ---------- */
+.exam-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.exam-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: 1.5px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease), transform 0.15s var(--ease);
+}
+
+.exam-nav__btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.exam-nav__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.exam-nav__btn--primary {
+  border-color: transparent;
+  background: var(--gradient-cta);
+  box-shadow: var(--shadow-cta);
+}
+
+.exam-nav__btn--primary:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--gradient-cta);
+}
+
+.exam-nav__state {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+.exam-nav__state.is-done {
+  color: #4ade80;
+}
+
+/* ---------- ยืนยันการส่ง ---------- */
+.exam-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(4, 8, 30, 0.65);
+  backdrop-filter: blur(4px);
+  animation: fade-in 0.2s var(--ease);
+}
+
+.exam-confirm__card {
+  width: min(460px, 100%);
+  padding: 30px 28px 26px;
+  border-radius: 22px;
+  background: #ffffff;
+  text-align: center;
+  color: #334155;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  animation: modal-in 0.3s var(--ease);
+}
+
+.exam-confirm__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+}
+
+.exam-confirm h2 {
+  margin-top: 16px;
+  font-size: 1.4rem;
+  color: #0f172a;
+}
+
+.exam-confirm p {
+  margin-top: 8px;
+}
+
+.exam-confirm p b {
+  color: #e11d48;
+}
+
+.exam-confirm__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.exam-confirm .exam-nav__btn:not(.exam-nav__btn--primary) {
+  color: #334155;
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+/* ---------- Animations ---------- */
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateX(calc(var(--dir) * 40px)) rotate(calc(var(--dir) * 1deg)); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes chip-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .exam {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .exam-rail {
+    position: static;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 14px;
+  }
+
+  .exam-rail__head {
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .exam-rail__meter {
+    display: none;
+  }
+
+  .exam-rail__list {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .exam-rail__item {
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .exam-rail__item svg:not(.exam-rail__tick) {
+    display: none;
+  }
+
+  .exam-rail__no {
+    font-size: 0.85rem;
+  }
+
+  .exam-rail__submit {
+    height: 40px;
+    padding: 0 16px;
+  }
+
+  .exam-sheet {
+    padding-top: 30px;
+  }
+
+  .ex-order {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .exam-rail__list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .exam-card {
+    padding: 26px 18px 22px 34px;
+    border-radius: 20px;
+  }
+
+  .exam-card::before {
+    left: 6px;
+  }
+
+  .exam-card::after {
+    left: 34px;
+    right: 18px;
+  }
+
+  .exam-card {
+    background:
+      linear-gradient(90deg, transparent 21px, rgba(244, 63, 94, 0.28) 21px, rgba(244, 63, 94, 0.28) 23px, transparent 23px),
+      repeating-linear-gradient(180deg, transparent 0 35px, rgba(37, 99, 235, 0.05) 35px 36px),
+      #ffffff;
+  }
+
+  .ex-choices {
+    grid-template-columns: 1fr;
+  }
+
+  .ex-classify__row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .ex-seg {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ex-flow {
+    padding: 12px;
+  }
+
+  .ex-flow__slot {
+    max-width: 100%;
+  }
+
+  .exam-nav__btn {
+    padding: 11px 14px;
+  }
+
+  .exam-nav__state {
+    display: none;
+  }
+}

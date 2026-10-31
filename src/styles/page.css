@@ -1,0 +1,125 @@
+/* ==========================================================
+   หน้าย่อย (ใบเนื้อหา ใบงาน แบบทดสอบ สื่อสอน) และหน้า 404
+   ========================================================== */
+.page-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: calc(-1 * var(--navbar-height));
+  padding: calc(var(--navbar-height) + 44px) 0 56px;
+  background: var(--gradient-hero);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.page-header .container {
+  position: relative;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.breadcrumb a {
+  transition: color var(--duration) var(--ease);
+}
+
+.breadcrumb a:hover {
+  color: var(--color-blue-600);
+}
+
+.breadcrumb [aria-current] {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.page-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-header__icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  color: var(--color-on-accent);
+  background: var(--gradient-brand);
+  box-shadow: var(--shadow-brand);
+}
+
+.page-header__title {
+  font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+  font-weight: 700;
+}
+
+.page-header__subtitle {
+  margin-top: 10px;
+  color: var(--color-muted);
+}
+
+.page-body {
+  padding: 48px 0 88px;
+}
+
+/* พื้นที่ว่างสำหรับเพิ่มเนื้อหาในอนาคต */
+.page-empty {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  padding: 32px;
+  border: 2px dashed var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-muted);
+}
+
+/* ---------- 404 ---------- */
+.not-found {
+  padding: 96px 0;
+  text-align: center;
+}
+
+.not-found__inner {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.not-found__code {
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.not-found .btn {
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    padding: calc(var(--navbar-height) + 28px) 0 40px;
+  }
+
+  .page-header__icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .page-empty {
+    min-height: 240px;
+  }
+}

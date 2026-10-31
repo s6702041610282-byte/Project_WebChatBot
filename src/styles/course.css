@@ -1,0 +1,563 @@
+/* ==========================================================
+   หน้าโครงสร้างรายวิชา + เกณฑ์การวัดผล
+   ========================================================== */
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-ink);
+}
+
+.page-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 48px;
+}
+
+/* ---------- ลำดับการเรียน ---------- */
+.path {
+  margin-bottom: 48px;
+}
+
+.path__steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.path__steps li {
+  display: flex;
+}
+
+.path__step {
+  position: relative;
+  flex: 1;
+  transition: border-color 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+}
+
+.path__steps li:not(:last-child) .path__step::after {
+  content: '';
+  position: absolute;
+  top: 38px;
+  right: -14px;
+  width: 12px;
+  height: 2px;
+  background: rgba(var(--accent-rgb), 0.6);
+}
+
+.path__no {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #fff;
+  background: var(--gradient-cta);
+  box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.45);
+}
+
+.path__step b {
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+}
+
+.path__step small {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- หน่วยการเรียน (accordion) ---------- */
+.syllabus {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.syl {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.syl.is-open {
+  border-color: rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.15);
+}
+
+.syl__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 18px 22px;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.syl__no {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+}
+
+.syl__no small {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--color-violet-600);
+}
+
+.syl.is-open .syl__no {
+  background: var(--gradient-cta);
+  border-color: transparent;
+}
+
+.syl.is-open .syl__no small {
+  color: #e0f2fe;
+}
+
+.syl__title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.syl__title b {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.syl__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+.syl__chev {
+  color: var(--color-muted);
+  transition: transform 0.3s var(--ease);
+}
+
+.syl.is-open .syl__chev {
+  transform: rotate(180deg);
+  color: var(--color-violet-600);
+}
+
+.syl__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease);
+}
+
+.syl.is-open .syl__body {
+  grid-template-rows: 1fr;
+}
+
+.syl__inner {
+  overflow: hidden;
+  padding: 0 22px 0 98px;
+}
+
+.syl.is-open .syl__inner {
+  padding-bottom: 22px;
+}
+
+.syl__topics {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.syl__topics li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text);
+}
+
+.syl__topics svg {
+  color: #4ade80;
+  flex: 0 0 auto;
+}
+
+.syl__task {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  color: var(--color-violet-600);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px dashed rgba(var(--accent-rgb), 0.4);
+}
+
+@media (max-width: 900px) {
+  .path__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .path__step::after {
+    display: none;
+  }
+
+}
+
+@media (max-width: 560px) {
+  .path__steps {
+    grid-template-columns: 1fr;
+  }
+
+  .syl__head {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .syl__no {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .syl__inner {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+.path__step:hover {
+  border-color: rgba(var(--accent-rgb), 0.55);
+  transform: translateY(-3px);
+}
+
+/* ---------- ข้อมูลรายวิชา ---------- */
+.syl-info {
+  margin-bottom: 44px;
+}
+
+.syl-info__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.syl-info__grid li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+}
+
+.syl-info__grid svg {
+  margin-bottom: 6px;
+  color: var(--color-violet-500);
+}
+
+.syl-info__grid small {
+  color: var(--color-muted);
+}
+
+.syl-info__grid b {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.syl-info__teachers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px dashed rgba(var(--accent-rgb), 0.35);
+}
+
+.syl-info__teachers svg {
+  color: var(--color-violet-500);
+}
+
+.syl-info__teachers span {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.syl-info__teachers em {
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  font-style: normal;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.syl-info__teachers small {
+  margin-left: auto;
+  color: var(--color-muted);
+}
+
+.syl__goal {
+  margin: 0 0 12px;
+  padding-left: 12px;
+  font-weight: 600;
+  color: var(--color-violet-600);
+  border-left: 3px solid var(--color-violet-500);
+}
+
+/* ---------- ใบสั่งงาน ---------- */
+.syl-task {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 44px 0;
+  padding: 26px 28px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.32), rgba(14, 22, 48, 0.75));
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.12);
+}
+
+.syl-task__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  color: #fde68a;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.syl-task small {
+  color: var(--color-violet-600);
+}
+
+.syl-task h2 {
+  margin: 4px 0 6px;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.syl-task p {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.syl-task .btn {
+  flex: 0 0 auto;
+}
+
+/* ---------- จุดประสงค์ ---------- */
+.syl-obj {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 44px;
+}
+
+.syl-obj__group {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-top: 3px solid var(--dc);
+}
+
+.syl-obj__group h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: var(--color-ink);
+}
+
+.syl-obj__group h3 span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--dc);
+}
+
+.syl-obj__group ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.syl-obj__group li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+}
+
+.syl-obj__group li b {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.syl-obj__group li p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--color-text);
+}
+
+.syl-obj__group li em {
+  font-size: 0.78rem;
+  font-style: normal;
+  color: var(--color-muted);
+}
+
+/* ---------- พื้นฐาน + สื่อ ---------- */
+.syl-extra {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 32px;
+}
+
+.syl-extra__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.syl-extra__list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text);
+}
+
+.syl-extra__list svg {
+  color: #4ade80;
+}
+
+.syl-extra__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.syl-extra__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+}
+
+.syl-extra__chips svg {
+  color: var(--color-violet-500);
+}
+
+@media (max-width: 1020px) {
+  .path__steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .path__steps li .path__step::after {
+    display: none;
+  }
+
+  .syl-info__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .syl-obj,
+  .syl-extra {
+    grid-template-columns: 1fr;
+  }
+
+  .syl-task {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .path__steps {
+    grid-template-columns: 1fr;
+  }
+
+  .syl-info__teachers small {
+    margin-left: 0;
+  }
+
+  .syl-task {
+    padding: 22px 18px;
+  }
+}

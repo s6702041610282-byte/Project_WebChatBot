@@ -1,0 +1,222 @@
+/* ==========================================================
+   หน้าเรียน (หลังเข้าสู่ระบบ)
+   ========================================================== */
+.learn-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: calc(-1 * var(--navbar-height));
+  padding: calc(var(--navbar-height) + 40px) 0 48px;
+  background: var(--gradient-hero);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.learn-hero__inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+}
+
+.learn-hero__title {
+  margin: 14px 0 4px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--color-ink);
+}
+
+.learn-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 1.5em;
+  margin: 0 0 24px;
+  color: var(--color-muted);
+}
+
+.learn-hero__mascot {
+  padding-right: 40px;
+}
+
+.next-card {
+  max-width: 620px;
+  padding: 24px 26px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(14, 22, 48, 0.75));
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.next-card__kicker {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-violet-600);
+}
+
+.next-card h2 {
+  margin: 4px 0 6px;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.next-card p {
+  margin: 0 0 18px;
+  color: var(--color-text);
+}
+
+.learn-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.progress-card {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(10px);
+}
+
+.progress-card__count {
+  margin-left: auto;
+  padding: 2px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  color: var(--color-violet-600);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.progress-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-line);
+}
+
+.progress-list li > svg {
+  flex: 0 0 auto;
+  color: var(--color-muted);
+}
+
+.progress-list li.is-done > svg {
+  color: #4ade80;
+}
+
+.progress-list li div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-list b {
+  color: var(--color-ink);
+}
+
+.progress-list small {
+  color: var(--color-muted);
+}
+
+.progress-list__go {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--gradient-cta);
+}
+
+.progress-list li.is-done .progress-list__go {
+  color: var(--color-violet-600);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.progress-card__gain {
+  margin: 14px 0 0;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+.mini-units {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-units li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text);
+}
+
+.mini-units span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-violet-600);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.progress-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.progress-card__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.progress-card__links a:hover {
+  border-color: #22d3ee;
+  color: var(--color-violet-600);
+}
+
+.learn__cats-title {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .learn-hero__inner,
+  .learn-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .learn-hero__mascot {
+    display: none;
+  }
+}

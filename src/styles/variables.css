@@ -1,0 +1,75 @@
+/* ==========================================================
+   Design tokens — ChatBot Learning (ธีมดำ–น้ำเงินเข้ม เรืองแสงฟ้านีออน)
+   เปลี่ยนสี ฟอนต์ ระยะห่าง ได้จากไฟล์นี้ไฟล์เดียว
+   ========================================================== */
+:root {
+  color-scheme: dark;
+
+  /* พื้นหลังส่วนหัว (Hero / หัวหน้าย่อย) */
+  --gradient-hero:
+    radial-gradient(55% 55% at 78% 8%, rgba(37, 99, 235, 0.42), transparent 70%),
+    radial-gradient(45% 50% at 8% 85%, rgba(14, 165, 233, 0.16), transparent 70%),
+    linear-gradient(180deg, #050817 0%, #070d26 60%, #04060f 100%);
+
+  /* โทนเน้น */
+  --color-blue-50: rgba(255, 255, 255, 0.08);   /* พื้นจาง ๆ ของไอคอน / hover */
+  --color-blue-100: rgba(255, 255, 255, 0.14);
+  --color-blue-500: #5b8cff;
+  --color-blue-600: #93c5fd;                    /* ลิงก์ / ข้อความเน้น */
+  --color-violet-50: rgba(56, 189, 248, 0.1);
+  --color-violet-100: rgba(56, 189, 248, 0.35);
+  --color-violet-500: #38bdf8;                  /* จุดตกแต่ง (ฟ้านีออน) */
+  --color-violet-600: #7dd3fc;                  /* หัวข้อย่อย (kicker) */
+
+  --color-ink: #ffffff;          /* หัวข้อ */
+  --color-text: #c7d2ee;         /* เนื้อความ */         /* เนื้อความ */
+  --color-muted: #8391b5;        /* ข้อความรอง */        /* ข้อความรอง */
+  --color-line: rgba(120, 160, 255, 0.14);
+  --color-surface: rgba(14, 22, 48, 0.6);      /* การ์ดกระจก */    /* การ์ดกระจก */
+  --color-surface-solid: #0b1226;
+  --color-bg: #04060f;
+  --color-bg-tint: #070b1a;
+  --color-footer: #02040a;
+  --color-on-accent: #ffffff;
+
+  --gradient-brand: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #38bdf8 100%);
+  --gradient-soft: linear-gradient(160deg, #0a1230 0%, #05081a 100%);
+  --gradient-text: linear-gradient(180deg, #ffffff 20%, #93c5fd 100%);
+
+  /* ปุ่มหลัก (ฟ้านีออน) */
+  --gradient-cta: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  --color-on-cta: #ffffff;
+  --shadow-cta: 0 10px 30px rgba(56, 189, 248, 0.45);
+  --accent-rgb: 56, 189, 248;   /* ใช้กับ rgba(var(--accent-rgb), ความทึบ) */
+
+  /* เอฟเฟกต์แสง */
+  --dot-grid: rgba(255, 255, 255, 0.06);
+  --glow-1: rgba(110, 160, 255, 0.45);
+  --glow-2: rgba(122, 92, 255, 0.35);
+  --glow-3: rgba(77, 208, 255, 0.3);
+  --nav-bg: rgba(4, 6, 15, 0.72);
+  --focus-ring: rgba(56, 189, 248, 0.6);
+
+  /* ฟอนต์ */
+  --font-heading: 'Prompt', 'Sarabun', system-ui, sans-serif;
+  --font-body: 'Sarabun', 'Prompt', system-ui, sans-serif;
+
+  /* ขนาด */
+  --container: 1180px;
+  --navbar-height: 72px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* เงา / แสงเรือง */
+  --shadow-sm: 0 2px 10px rgba(3, 8, 40, 0.35);
+  --shadow-md: 0 10px 30px rgba(3, 8, 40, 0.45);
+  --shadow-lg: 0 24px 60px rgba(3, 8, 40, 0.55);
+  --shadow-brand: 0 10px 28px rgba(37, 99, 235, 0.45);
+  --shadow-brand-hover: 0 14px 36px rgba(56, 189, 248, 0.55);
+
+  /* การเคลื่อนไหว */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration: 0.25s;
+}
