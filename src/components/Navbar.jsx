@@ -64,8 +64,9 @@ export default function Navbar() {
   }, [open, profileOpen]);
 
   const handleLogout = async () => {
+    const wasPreview = user?.preview;
     await logout();
-    navigate('/');
+    navigate(wasPreview ? '/admin' : '/');
   };
 
   return (
@@ -107,7 +108,7 @@ export default function Navbar() {
                       <Scale size={17} aria-hidden="true" /> สัดส่วนเนื้อหา
                     </Link>
                     <button type="button" className="navbar__link navbar__logout" onClick={handleLogout}>
-                      <LogOut size={17} aria-hidden="true" /> ออกจากระบบ ({user.displayName})
+                      <LogOut size={17} aria-hidden="true" /> {user.preview ? 'ปิดโหมดพรีเซนต์' : `ออกจากระบบ (${user.displayName})`}
                     </button>
                   </>
                 ) : (
@@ -149,12 +150,18 @@ export default function Navbar() {
                       <span>
                         {[user.studentId && `เลขที่ ${user.studentId}`, user.classroom && `ห้อง ${user.classroom}`]
                           .filter(Boolean)
-                          .join(' · ') || user.email || 'นักเรียน'}
+                          .join(' · ') || user.email || (user.preview ? 'Admin' : 'นักเรียน')}
                       </span>
+                      {user.preview ? (
+                        <em className="profile__sync profile__sync--local">
+                          <CloudOff size={13} aria-hidden="true" /> โหมดพรีเซนต์ ไม่บันทึกขึ้นระบบ
+                        </em>
+                      ) : (
                       <em className={`profile__sync profile__sync--${sync}`}>
                         {sync === 'offline' || sync === 'local' ? <CloudOff size={13} aria-hidden="true" /> : <Cloud size={13} aria-hidden="true" />}
                         {sync === 'saving' ? 'กำลังบันทึกขึ้นระบบ…' : sync === 'offline' ? 'ยังไม่ได้บันทึก (ออฟไลน์)' : sync === 'local' ? 'บันทึกในเครื่องนี้' : 'บันทึกบนระบบแล้ว'}
                       </em>
+                      )}
                     </div>
                     <Link to="/profile" role="menuitem">
                       <UserRound size={16} aria-hidden="true" /> ข้อมูลส่วนตัว
@@ -166,7 +173,7 @@ export default function Navbar() {
                       <Scale size={16} aria-hidden="true" /> สัดส่วนเนื้อหา
                     </Link>
                     <button type="button" role="menuitem" className="profile__logout" onClick={handleLogout}>
-                      <LogOut size={16} aria-hidden="true" /> ออกจากระบบ
+                      <LogOut size={16} aria-hidden="true" /> {user.preview ? 'ปิดโหมดพรีเซนต์' : 'ออกจากระบบ'}
                     </button>
                   </div>
                 )}

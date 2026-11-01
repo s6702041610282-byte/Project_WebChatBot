@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { missions } from '../data/missions';
 import { units } from '../data/course';
+import { isPreview } from './preview';
 
 /**
  * ความคืบหน้าในเกม Chatbot Quest (เก็บในเบราว์เซอร์ แยกตามผู้ใช้)
@@ -57,8 +58,8 @@ export const passedCount = (p) => missions.filter((m) => p.missions[m.id]?.stars
 export const courseProgress = (p) =>
   Math.round((Object.keys(p.lessons).length / units.length) * 40 + (passedCount(p) / missions.length) * 60);
 
-/** ภารกิจเปิดให้เล่นเมื่อภารกิจก่อนหน้าผ่านแล้ว */
-export const isUnlocked = (p, index) => index === 0 || (p.missions[missions[index - 1].id]?.stars || 0) > 0;
+/** ภารกิจเปิดให้เล่นเมื่อภารกิจก่อนหน้าผ่านแล้ว (โหมดพรีเซนต์ของ Admin เปิดทุกภารกิจ) */
+export const isUnlocked = (p, index) => index === 0 || isPreview() || (p.missions[missions[index - 1].id]?.stars || 0) > 0;
 
 export function useProgress(uid) {
   const [p, setP] = useState(() => loadProgress(uid));

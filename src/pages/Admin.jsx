@@ -1,9 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   AlertCircle,
   ArrowUpRight,
   BookOpen,
   ClipboardCheck,
+  ClipboardList,
+  Compass,
+  Database,
+  Home,
+  ListTree,
+  MonitorPlay,
+  PieChart,
+  Presentation,
+  RotateCcw,
+  Rocket,
   Flag,
   GraduationCap,
   Lock,
@@ -22,6 +33,8 @@ import { authErrorMessage } from '../services/authService';
 import { journey } from '../utils/journey';
 import { units } from '../data/course';
 import { missions } from '../data/missions';
+import { setPreview, usePreview } from '../utils/preview';
+import { resetPreviewData } from '../contexts/AuthContext';
 
 const KEY = 'chatbot-learning:admin';
 const STEPS = [
@@ -94,6 +107,59 @@ function localData() {
   };
 }
 
+/** ข้อมูลตัวอย่างสำหรับพรีเซนต์ (สุ่มแบบคงที่ เปิดกี่ครั้งก็ได้ผลเดิม) */
+function demoData() {
+  let seed = 7;
+  const rnd = () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+  const pick = (xs) => xs[Math.floor(rnd() * xs.length)];
+  const firsts = ['กัญญา', 'ณัฐวุฒิ', 'ธนพร', 'ปิยะ', 'พิมพ์ชนก', 'ภูมิ', 'วรรณิดา', 'ศุภกร', 'อารีย์', 'กิตติ', 'ชนิดา', 'ธีรภัทร', 'นภัส', 'ปวีณา', 'รัชชานนท์', 'สุพิชญา'];
+  const lasts = ['ใจดี', 'แสงทอง', 'มีสุข', 'รุ่งเรือง', 'ศรีสวัสดิ์', 'บุญมา', 'ทองคำ', 'พรหมมา', 'สายสุวรรณ', 'วงศ์ไทย'];
+  const rooms = ['ปวช.2/1', 'ปวช.2/2'];
+  const now = Date.now();
+  const students = [];
+  rooms.forEach((room, ri) => {
+    for (let i = 1; i <= 18; i += 1) {
+      // ขั้นที่ไปถึง: ส่วนใหญ่เรียนครบหรือใกล้ครบ
+      const r = rnd();
+      const stage = r < 0.06 ? 0 : r < 0.16 ? 1 : r < 0.3 ? 2 : r < 0.42 ? 3 : 4;
+      const pre = 2 + Math.floor(rnd() * 5);
+      const results = {};
+      if (stage >= 1) results.pretest = { score: pre, total: 10, finishedAt: new Date(now - 20 * 864e5).toISOString() };
+      if (stage >= 4) results.posttest = { score: Math.min(10, pre + 2 + Math.floor(rnd() * 4) + ri), total: 10, finishedAt: new Date(now - 2 * 864e5).toISOString() };
+      const lessons = {};
+      const read = stage >= 2 ? units.length : stage === 1 ? Math.floor(rnd() * units.length) : 0;
+      units.slice(0, read).forEach((u) => {
+        lessons[u.no] = true;
+      });
+      const ms = {};
+      if (stage >= 3) {
+        const reach = stage >= 4 ? 1 + Math.floor(rnd() * missions.length) : 1;
+        missions.forEach((m, k) => {
+          if (k < reach) ms[m.id] = { stars: 1 + Math.floor(rnd() * 3), best: 60 + Math.floor(rnd() * 41), attempts: 1 + Math.floor(rnd() * 3) };
+          else if (k === reach && rnd() < 0.5) ms[m.id] = { stars: 0, best: 20 + Math.floor(rnd() * 40), attempts: 1 };
+        });
+      } else if (stage === 2 && rnd() < 0.6) {
+        ms[missions[0].id] = { stars: 0, best: 30 + Math.floor(rnd() * 30), attempts: 1 + Math.floor(rnd() * 2) };
+      }
+      students.push({
+        uid: `demo-${ri}-${i}`,
+        email: `student${ri + 1}${String(i).padStart(2, '0')}@example.com`,
+        firstName: pick(firsts),
+        lastName: pick(lasts),
+        studentId: String(i),
+        classroom: room,
+        lastSeen: new Date(now - Math.floor(rnd() * 12) * 864e5).toISOString(),
+        progress: { xp: read * 20 + Object.keys(ms).length * 150, lessons, missions: ms },
+        results
+      });
+    }
+  });
+  return { ...localData(), local: false, demo: true, students, sheetUrl: '' };
+}
+
 const avg = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 const fmt = (v, d = 1) => (v === null ? '–' : v.toFixed(d).replace(/\.0$/, ''));
 const pct = (n, d) => (d ? Math.round((n / d) * 100) : 0);
@@ -137,6 +203,7 @@ export default function Admin() {
   }, [token, load]);
 
   const signOut = () => {
+    setPreview(false);
     saveToken('');
     setToken('');
     setData(null);
@@ -150,6 +217,7 @@ export default function Admin() {
             onIn={(t) => {
               saveToken(t);
               setToken(t);
+              setPreview(true); // เข้ามุม Admin แล้วเปิดโหมดพรีเซนต์ให้อัตโนมัติ
             }}
           />
         ) : (
@@ -228,9 +296,30 @@ function AdminGate({ onIn }) {
 }
 
 /* ---------- ภาพรวม ---------- */
-function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
+function Dashboard({ data: real, busy, error, onRefresh, onSignOut }) {
   const [room, setRoom] = useState('all');
   const [openStep, setOpenStep] = useState(null);
+  const [demo, setDemo] = useState(() => {
+    try {
+      return sessionStorage.getItem(`${KEY}:demo`) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const toggleDemo = () => {
+    const v = !demo;
+    setDemo(v);
+    setRoom('all');
+    setOpenStep(null);
+    try {
+      if (v) sessionStorage.setItem(`${KEY}:demo`, '1');
+      else sessionStorage.removeItem(`${KEY}:demo`);
+    } catch {
+      /* ไม่เป็นไร */
+    }
+  };
+  const demoSet = useMemo(() => (demo ? demoData() : null), [demo]);
+  const data = demoSet || real;
 
   const all = useMemo(() => data?.students || [], [data]);
   const rooms = useMemo(() => [...new Set(all.map((s) => s.classroom || 'ไม่ระบุห้อง'))].sort((a, b) => a.localeCompare(b, 'th')), [all]);
@@ -256,6 +345,7 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
             <span className="auth-loading__spinner" aria-hidden="true" /> กำลังโหลดข้อมูลนักเรียน…
           </>
         )}
+        <PresentPanel />
       </div>
     );
   }
@@ -269,7 +359,7 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
           </span>
           <h1>ภาพรวมทั้งห้อง</h1>
           <p>
-            อัปเดตล่าสุด {data.time} · {data.local ? 'ข้อมูลจากเครื่องนี้' : 'ข้อมูลจาก Google Sheet'}
+            อัปเดตล่าสุด {data.time} · {data.demo ? 'ข้อมูลตัวอย่างสำหรับพรีเซนต์' : data.local ? 'ข้อมูลจากเครื่องนี้' : 'ข้อมูลจาก Google Sheet'}
           </p>
         </div>
         <div className="adash__tools">
@@ -284,7 +374,16 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
               ))}
             </select>
           </label>
-          <button type="button" className="qbtn qbtn--soft qbtn--sm" onClick={onRefresh} disabled={busy}>
+          <button
+            type="button"
+            className={`qbtn qbtn--sm ${demo ? 'qbtn--primary' : 'qbtn--ghost'}`}
+            onClick={toggleDemo}
+            aria-pressed={demo}
+            title="สลับไปใช้ข้อมูลนักเรียนตัวอย่าง เพื่อให้กราฟมีข้อมูลตอนพรีเซนต์"
+          >
+            <Database size={15} aria-hidden="true" /> {demo ? 'กำลังแสดงข้อมูลตัวอย่าง' : 'ข้อมูลตัวอย่าง'}
+          </button>
+          <button type="button" className="qbtn qbtn--soft qbtn--sm" onClick={onRefresh} disabled={busy || demo}>
             <RefreshCw size={15} aria-hidden="true" className={busy ? 'spin' : ''} /> รีเฟรช
           </button>
           {data.sheetUrl && (
@@ -304,6 +403,15 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
         </p>
       )}
 
+      <PresentPanel />
+
+      {data.demo && (
+        <p className="anote anote--demo" role="note">
+          <Database size={16} aria-hidden="true" />
+          กำลังแสดงข้อมูลนักเรียนตัวอย่าง (36 คน) เพื่อการพรีเซนต์ ไม่ใช่ข้อมูลจริง — กดปุ่ม “กำลังแสดงข้อมูลตัวอย่าง” ด้านบนเพื่อกลับไปดูข้อมูลจริง
+        </p>
+      )}
+
       {data.local && (
         <p className="anote" role="note">
           <AlertCircle size={16} aria-hidden="true" />
@@ -315,6 +423,9 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
         <div className="adash__empty">
           <Robot size={110} mood="think" />
           <p>{data.local ? 'ยังไม่มีนักเรียนใช้งานบนเครื่องนี้' : 'ยังไม่มีนักเรียนสมัครเข้าใช้งาน'}</p>
+          <button type="button" className="qbtn qbtn--primary" onClick={toggleDemo}>
+            <Database size={16} aria-hidden="true" /> ดูตัวอย่างด้วยข้อมูลจำลอง
+          </button>
         </div>
       ) : (
         <>
@@ -485,6 +596,103 @@ function Dashboard({ data, busy, error, onRefresh, onSignOut }) {
         </>
       )}
     </div>
+  );
+}
+
+/* ---------- โหมดพรีเซนต์: เปิดทุกหน้าโดยไม่ต้องเข้าสู่ระบบ/ไม่ติดล็อก ---------- */
+const TOUR = [
+  {
+    group: 'หน้าต้อนรับ',
+    items: [
+      { to: '/', label: 'หน้าแรก', icon: Home },
+      { to: '/syllabus', label: 'โครงสร้างรายวิชา', icon: ListTree },
+      { to: '/criteria', label: 'สัดส่วนเนื้อหา', icon: PieChart },
+      { to: '/guide', label: 'คู่มือการใช้งาน', icon: Compass }
+    ]
+  },
+  {
+    group: 'ห้องเรียน',
+    items: [
+      { to: '/learn', label: 'หน้าหลักผู้เรียน', icon: Rocket },
+      { to: '/quizzes/pretest', label: 'แบบทดสอบก่อนเรียน', icon: ClipboardCheck },
+      { to: '/content', label: 'บทเรียน 6 พาร์ท', icon: BookOpen },
+      { to: '/worksheets', label: 'กิจกรรม (แผนที่ภารกิจ)', icon: Flag },
+      { to: '/quizzes/posttest', label: 'แบบทดสอบหลังเรียน', icon: GraduationCap },
+      { to: '/quizzes', label: 'รวมแบบทดสอบ', icon: ClipboardList },
+      { to: '/media', label: 'สื่อสอน', icon: MonitorPlay }
+    ]
+  },
+  {
+    group: 'ภารกิจ',
+    items: missions.map((m) => ({ to: `/quest/${m.id}`, label: `ภารกิจ ${m.no} · ${m.title}`, icon: Flag }))
+  }
+];
+
+function PresentPanel() {
+  const on = usePreview();
+  const [cleared, setCleared] = useState(false);
+  return (
+    <section className={`qpanel apresent ${on ? 'is-on' : ''}`} aria-labelledby="a-present">
+      <div className="apresent__head">
+        <span className="apresent__ic" aria-hidden="true">
+          <Presentation size={20} />
+        </span>
+        <div>
+          <h2 id="a-present">โหมดพรีเซนต์</h2>
+          <p className="apanel__sub">
+            {on
+              ? 'เปิดอยู่ — เข้าได้ทุกหน้าโดยไม่ต้องเข้าสู่ระบบ บทเรียน กิจกรรม และแบบทดสอบปลดล็อกทั้งหมด (ไม่บันทึกขึ้นระบบ)'
+              : 'ปิดอยู่ — หน้าเรียนจะล็อกตามลำดับเหมือนที่นักเรียนเห็น'}
+          </p>
+        </div>
+        <div className="apresent__tools">
+          {on && (
+            <button
+              type="button"
+              className="qbtn qbtn--ghost qbtn--sm"
+              onClick={() => {
+                resetPreviewData();
+                setCleared(true);
+                setTimeout(() => setCleared(false), 1800);
+              }}
+              title="ล้างคะแนน/ความคืบหน้าที่ลองทำระหว่างพรีเซนต์"
+            >
+              <RotateCcw size={15} aria-hidden="true" /> {cleared ? 'ล้างแล้ว' : 'ล้างข้อมูลที่ลองทำ'}
+            </button>
+          )}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={on}
+            className={`aswitch ${on ? 'is-on' : ''}`}
+            onClick={() => setPreview(!on)}
+          >
+            <span className="aswitch__knob" aria-hidden="true" />
+            <span className="aswitch__text">{on ? 'เปิด' : 'ปิด'}</span>
+          </button>
+        </div>
+      </div>
+      {on && (
+        <div className="apresent__groups">
+          {TOUR.map((g) => (
+            <div key={g.group} className="apresent__group">
+              <h3>{g.group}</h3>
+              <ul>
+                {g.items.map(({ to, label, icon: Icon }) => (
+                  <li key={to}>
+                    <Link to={to} className="apresent__link">
+                      <Icon size={16} aria-hidden="true" />
+                      <span>{label}</span>
+                      <ArrowUpRight size={14} aria-hidden="true" className="apresent__go" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

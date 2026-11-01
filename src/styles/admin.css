@@ -641,3 +641,240 @@
   flex: none;
   margin-top: 3px;
 }
+
+/* ==========================================================
+   โหมดพรีเซนต์ (Admin)
+   ========================================================== */
+.apresent {
+  display: grid;
+  gap: var(--s2, 16px);
+  border: 1.5px dashed var(--q-line);
+}
+
+.apresent.is-on {
+  border: 1.5px solid #bac8ff;
+  background: linear-gradient(160deg, #f5f7ff, #fff 60%);
+}
+
+.apresent__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.apresent__head > div:nth-child(2) {
+  flex: 1 1 260px;
+}
+
+.apresent__head h2 {
+  margin: 0;
+}
+
+.apresent__head .apanel__sub {
+  margin: 2px 0 0;
+}
+
+.apresent__ic {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  color: var(--q-lav);
+  background: var(--q-lav-soft);
+}
+
+.apresent.is-on .apresent__ic {
+  color: #fff;
+  background: var(--q-blue);
+}
+
+.apresent__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.aswitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--q-muted);
+  background: #e9ecef;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.aswitch__knob {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s;
+}
+
+.aswitch.is-on {
+  flex-direction: row-reverse;
+  padding: 4px 4px 4px 12px;
+  color: #fff;
+  background: var(--q-good, #2f9e44);
+}
+
+.aswitch:focus-visible {
+  outline: 3px solid var(--q-blue-soft);
+  outline-offset: 2px;
+}
+
+.apresent__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--s2, 16px);
+}
+
+.apresent__group h3 {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--q-muted);
+}
+
+.apresent__group ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apresent__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--q-line);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--q-ink);
+  background: var(--q-card, #fff);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.apresent__link span {
+  flex: 1;
+}
+
+.apresent__link svg:first-child {
+  color: var(--q-blue);
+}
+
+.apresent__go {
+  color: var(--q-muted);
+}
+
+.apresent__link:hover {
+  border-color: var(--q-blue);
+  transform: translateX(2px);
+}
+
+.anote--demo {
+  color: #364fc7;
+  background: #edf2ff;
+  border-color: #bac8ff;
+}
+
+.adash__empty .qbtn {
+  margin-top: 8px;
+}
+
+.adash__loading .apresent {
+  width: 100%;
+  margin-top: var(--s3, 24px);
+  text-align: left;
+}
+
+/* แถบโหมดพรีเซนต์ลอยด้านล่างทุกหน้า */
+.pvbar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  max-width: calc(100% - 32px);
+  padding: 8px 8px 8px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #fff;
+  background: rgba(33, 37, 64, 0.92);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  transform: translateX(-50%);
+}
+
+.pvbar__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #ffd43b;
+}
+
+.pvbar__text {
+  opacity: 0.85;
+}
+
+.pvbar__actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.pvbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pvbar__btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.pvbar__btn--off {
+  background: #e03131;
+}
+
+.pvbar__btn--off:hover {
+  background: #c92a2a;
+}
+
+@media (max-width: 560px) {
+  .pvbar {
+    border-radius: 18px;
+  }
+  .pvbar__text {
+    display: none;
+  }
+}

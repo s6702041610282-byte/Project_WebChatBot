@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, Clock, ListChecks, Lock, PencilLine, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, Clock, ListChecks, Lock, PencilLine, RotateCcw, ShieldCheck, Sparkles, X } from 'lucide-react';
 import QuizDeck from '../components/quiz/QuizDeck';
 import Robot from '../components/quest/art/Robot';
 import { quizzes } from '../data/quizzes';
-import { getAllResults, getResult, saveResult } from '../utils/quizStorage';
+import { clearResult, getAllResults, getResult, saveResult } from '../utils/quizStorage';
 import { describeAnswer, describeCorrect, isCorrect, scoreQuiz } from '../utils/quizGrading';
 import { useAuth } from '../contexts/AuthContext';
 import { useProgress } from '../utils/progress';
@@ -14,7 +14,7 @@ import { logEvent } from '../services/sheetLogger';
 const mmss = (s) => `${Math.floor(s / 60)} นาที ${s % 60} วินาที`;
 
 /* ---------- ผลการทดสอบ + เฉลยทีละข้อ ---------- */
-function Result({ quiz, answers, seconds }) {
+function Result({ quiz, answers, seconds, onRetake }) {
   const total = quiz.questions.length;
   const score = scoreQuiz(quiz, answers);
   const pct = Math.round((score / total) * 100);
@@ -91,9 +91,15 @@ function Result({ quiz, answers, seconds }) {
               กลับหน้าหลัก <ArrowRight size={18} aria-hidden="true" />
             </Link>
           )}
-          <Link to="/quizzes" className="qbtn qbtn--ghost qbtn--lg">
-            <Lock size={16} aria-hidden="true" /> ส่งแล้ว ทำได้ครั้งเดียว
-          </Link>
+          {onRetake ? (
+            <button type="button" className="qbtn qbtn--ghost qbtn--lg" onClick={onRetake}>
+              <RotateCcw size={16} aria-hidden="true" /> ทำใหม่ (โหมดพรีเซนต์)
+            </button>
+          ) : (
+            <Link to="/quizzes" className="qbtn qbtn--ghost qbtn--lg">
+              <Lock size={16} aria-hidden="true" /> ส่งแล้ว ทำได้ครั้งเดียว
+            </Link>
+          )}
         </div>
       </section>
 
@@ -146,7 +152,7 @@ function Result({ quiz, answers, seconds }) {
 export default function QuizPlay() {
   const { quizId } = useParams();
   const quiz = quizzes[quizId];
-  const { user } = useAuth();
+  const { user, isPreview: preview } = useAuth();
   const { progress } = useProgress(user?.uid);
   // ทำได้ครั้งเดียว: ถ้าเคยส่งแล้ว เปิดมาจะเห็นผลและเฉลยทันที
   const saved = quiz ? getResult(quiz.id) : null;
@@ -281,6 +287,16 @@ export default function QuizPlay() {
             quiz={quiz}
             answers={final.answers}
             seconds={final.seconds}
+            onRetake={
+              preview
+                ? () => {
+                    clearResult(quiz.id);
+                    setFinal({ answers: [], seconds: null });
+                    setStage('intro');
+                    window.scrollTo({ top: 0 });
+                  }
+                : undefined
+            }
           />
         )}
 

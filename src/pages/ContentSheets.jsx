@@ -323,11 +323,11 @@ function PartTrack({ no, setNo, isDone, isOpen, lessonsDone, read }) {
 
 /** บทเรียน (ใบเนื้อหา) 6 พาร์ท — ผ่านทีละพาร์ท แล้วไปลงมือปฏิบัติ */
 export default function ContentSheets() {
-  const { user } = useAuth();
+  const { user, isPreview: preview } = useAuth();
   const { progress, readLesson } = useProgress(user?.uid);
   const j = journey(progress, getAllResults());
   const isDone = (n) => Boolean(progress.lessons[n]);
-  const isOpen = (n) => n === 1 || isDone(n - 1);
+  const isOpen = (n) => preview || n === 1 || isDone(n - 1);
 
   const [no, setNo] = useState(() => {
     const first = lessons.find((l) => !progress.lessons[l.no]);
@@ -424,7 +424,7 @@ export default function ContentSheets() {
           desc={`เรียนทีละพาร์ท ตอบเช็กความเข้าใจให้ผ่าน แล้วไปลงมือปฏิบัติ · ผ่านแล้ว ${j.read}/${lessons.length} พาร์ท`}
         />
 
-        <PartTrack no={no} setNo={setNo} isDone={isDone} isOpen={isOpen} lessonsDone={j.done.lessons} read={j.read} />
+        <PartTrack no={no} setNo={setNo} isDone={isDone} isOpen={isOpen} lessonsDone={preview || j.done.lessons} read={j.read} />
 
         <div className="readbar" aria-hidden="true">
           <i style={{ width: `${readPct}%` }} />

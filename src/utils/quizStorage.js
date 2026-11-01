@@ -51,3 +51,10 @@ export function saveResult(quizId, result) {
   all[quizId] = result;
   replaceResults(currentUid, all);
 }
+
+/** ลบผลแบบทดสอบ (ใช้ในโหมดพรีเซนต์ของ Admin เพื่อทำซ้ำได้) */
+export function clearResult(quizId) {
+  const all = readResults(currentUid);
+  delete all[quizId];
+  replaceResults(currentUid, all);
+}

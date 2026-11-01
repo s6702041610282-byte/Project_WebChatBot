@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PreviewBar from '../components/PreviewBar';
 
 /** โครงหน้าที่ใช้ร่วมกันทุกหน้า: Navbar + เนื้อหา + Footer */
 export default function MainLayout() {
@@ -19,6 +20,7 @@ export default function MainLayout() {
         <Outlet />
       </main>
       <Footer />
+      <PreviewBar />
     </div>
   );
 }
